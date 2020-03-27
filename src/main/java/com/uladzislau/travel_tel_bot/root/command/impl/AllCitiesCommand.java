@@ -1,6 +1,8 @@
 package com.uladzislau.travel_tel_bot.root.command.impl;
 
-import com.uladzislau.travel_tel_bot.api.rest.RestService;
+import com.uladzislau.travel_tel_bot.api.model.City;
+import com.uladzislau.travel_tel_bot.api.rest.impl.CityRestService;
+import com.uladzislau.travel_tel_bot.message.BotDictionary;
 import com.uladzislau.travel_tel_bot.message.MessageSender;
 import com.uladzislau.travel_tel_bot.root.command.Command;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,11 +15,19 @@ public class AllCitiesCommand implements Command {
     @Autowired
     private MessageSender messageSender;
     @Autowired
-    private RestService restService;
+    private CityRestService cityRestService;
+    @Autowired
+    private BotDictionary dictionary;
 
     @Override
     public SendMessage execute(Long chatId) {
-
-        return messageSender.sendMessage(chatId, restService.getAllCities().toString());
+        StringBuilder stringBuilder = new StringBuilder();
+        for (City city : cityRestService.getAllCities()) {
+            stringBuilder.append(city.getName()).append("\n");
+        }
+        if (stringBuilder.toString().isEmpty()) {
+            stringBuilder.append(dictionary.getNoCities());
+        }
+        return messageSender.sendMessage(chatId, stringBuilder.toString());
     }
 }

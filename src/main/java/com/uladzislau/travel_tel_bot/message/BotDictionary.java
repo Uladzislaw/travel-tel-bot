@@ -18,4 +18,7 @@ public class BotDictionary {
 
     @Value("${msg.unknown_command}")
     private String unknownCommand;
+
+    @Value("${msg.cities.empty}")
+    private String noCities;
 }

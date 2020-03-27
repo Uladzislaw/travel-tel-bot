@@ -21,6 +21,8 @@ public class TravelTelegramBot extends TelegramLongPollingBot {
 
     @Autowired
     private CommandExecutor commandExecutor;
+    @Autowired
+    private UserMessageProcessor messageProcessor;
 
     @SneakyThrows
     public void onUpdateReceived(Update update) {
@@ -31,7 +33,9 @@ public class TravelTelegramBot extends TelegramLongPollingBot {
         final String message = update.getMessage().getText();
         if (isCommand(message)) {
             execute(commandExecutor.execute(message, chatId));
+            return;
         }
+        execute(messageProcessor.sendResponse(chatId, message));
     }
 
     private boolean isCommand(String msg) {
